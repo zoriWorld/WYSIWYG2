@@ -3,11 +3,25 @@ import styled from '@emotion/styled'
 
 const App = function () {
     const bold = () => {
-        const selected = window.getSelection()!.getRangeAt(0)
-        const node = document.createElement('b')
-        node.innerHTML = selected as unknown as string
-        selected.deleteContents()
-        selected.insertNode(node)
+        const sel = window.getSelection()!
+        let range = sel.getRangeAt(0)
+        range.deleteContents()
+        const el = document.createElement('div')
+        el.innerHTML = '하이'
+
+        const frag = document.createDocumentFragment()
+        const node = el.firstChild!
+        const lastNode = frag.appendChild(node)
+
+        range.insertNode(frag)
+
+        if (lastNode) {
+            range = range.cloneRange()
+            range.setStartAfter(lastNode)
+            range.collapse(true)
+            sel.removeAllRanges()
+            sel.addRange(range)
+        }
     }
     return (
         <div id="Editor">
